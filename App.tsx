@@ -6,56 +6,27 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {ThemeProvider, createTheme, Header} from '@rneui/themed';
+import {StatusBar, useColorScheme, Text} from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Tab, TabView} from '@rneui/themed';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import LinearGradient from 'react-native-linear-gradient';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const theme = createTheme({
+  lightColors: {
+    primary: '#e7e7e8',
+  },
+  darkColors: {
+    primary: '#000',
+  },
+  mode: 'dark',
+});
 
 function App(): React.JSX.Element {
+  const [index, setIndex] = React.useState(0);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -63,56 +34,57 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ThemeProvider theme={theme}>
+      <SafeAreaProvider>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+
+        <Header
+          backgroundImageStyle={{}}
+          barStyle="default"
+          centerComponent={{
+            text: 'MY NATIVE APP',
+            style: {color: '#fff'},
+          }}
+          centerContainerStyle={{}}
+          leftContainerStyle={{}}
+          placement="center"
+          rightContainerStyle={{}}
+          statusBarProps={{}}
+          ViewComponent={LinearGradient}
+          linearGradientProps={{
+            colors: ['blue', 'pink'],
+            start: {x: 0, y: 0.5},
+            end: {x: 1, y: 0.5},
+          }}
+        />
+
+        <TabView value={index} onChange={setIndex} animationType="spring">
+          <TabView.Item>
+            <Text>Recent</Text>
+          </TabView.Item>
+          <TabView.Item>
+            <Text>Favorite</Text>
+          </TabView.Item>
+          <TabView.Item>
+            <Text>Cart</Text>
+          </TabView.Item>
+        </TabView>
+
+        <Tab
+          value={index}
+          onChange={e => setIndex(e)}
+          indicatorStyle={{}}
+          variant="primary">
+          <Tab.Item title="Recent" />
+          <Tab.Item title="favourite" />
+          <Tab.Item title="cart" />
+        </Tab>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
