@@ -7,13 +7,14 @@
 
 import React from 'react';
 import {ThemeProvider, createTheme, Header} from '@rneui/themed';
-import {StatusBar, useColorScheme, Text} from 'react-native';
-
-import {Tab, TabView} from '@rneui/themed';
+import {StatusBar, useColorScheme, Text, View} from 'react-native';
 
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {Icon} from 'react-native-elements';
 
 const theme = createTheme({
   lightColors: {
@@ -25,8 +26,66 @@ const theme = createTheme({
   mode: 'dark',
 });
 
+function Feed() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Feed!</Text>
+    </View>
+  );
+}
+
+function Profile() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Profile!</Text>
+    </View>
+  );
+}
+
+function Notifications() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Notifications!</Text>
+    </View>
+  );
+}
+
+const Tab = createMaterialBottomTabNavigator();
+
+function MyTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Feed"
+      activeColor="#e91e63"
+      style={{backgroundColor: 'tomato'}}>
+      <Tab.Screen
+        name="Feed"
+        component={Feed}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color}) => <Icon name="rowing" />,
+        }}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={Notifications}
+        options={{
+          tabBarLabel: 'Updates',
+          tabBarIcon: ({color}) => <Icon name="rowing" />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color}) => <Icon name="rowing" />,
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 function App(): React.JSX.Element {
-  const [index, setIndex] = React.useState(0);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -60,28 +119,9 @@ function App(): React.JSX.Element {
             end: {x: 1, y: 0.5},
           }}
         />
-
-        <TabView value={index} onChange={setIndex} animationType="spring">
-          <TabView.Item>
-            <Text>Recent</Text>
-          </TabView.Item>
-          <TabView.Item>
-            <Text>Favorite</Text>
-          </TabView.Item>
-          <TabView.Item>
-            <Text>Cart</Text>
-          </TabView.Item>
-        </TabView>
-
-        <Tab
-          value={index}
-          onChange={e => setIndex(e)}
-          indicatorStyle={{}}
-          variant="primary">
-          <Tab.Item title="Recent" />
-          <Tab.Item title="favourite" />
-          <Tab.Item title="cart" />
-        </Tab>
+        <NavigationContainer>
+          <MyTabs />
+        </NavigationContainer>
       </SafeAreaProvider>
     </ThemeProvider>
   );
