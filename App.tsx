@@ -1,11 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {ThemeProvider, createTheme, Header} from '@rneui/themed';
 import {StatusBar, useColorScheme, Text, View} from 'react-native';
 
@@ -14,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import Carousel from 'react-native-snap-carousel';
 import {Icon} from 'react-native-elements';
 
 const theme = createTheme({
@@ -27,9 +21,43 @@ const theme = createTheme({
 });
 
 function Feed() {
+  // Example data for carousel items
+  const [carouselItems, setCarouselItems] = useState([
+    {title: 'Item 1', text: 'Text 1'},
+    {title: 'Item 2', text: 'Text 2'},
+    {title: 'Item 3', text: 'Text 3'},
+    {title: 'Item 4', text: 'Text 4'},
+    {title: 'Item 5', text: 'Text 5'},
+  ]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef(null);
+  // Render function for carousel items
+  const renderItem = ({item, index}) => (
+    <View
+      style={{
+        backgroundColor: 'floralwhite',
+        borderRadius: 5,
+        height: 250,
+        padding: 50,
+        marginLeft: 5,
+        marginRight: 5,
+      }}>
+      <Text style={{fontSize: 30}}>{item.title}</Text>
+      <Text>{item.text}</Text>
+    </View>
+  );
+
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Feed!</Text>
+      <Carousel
+        layout="default"
+        ref={carouselRef}
+        data={carouselItems}
+        sliderWidth={400}
+        itemWidth={500}
+        renderItem={renderItem}
+        onSnapToItem={index => setActiveIndex(index)}
+      />
     </View>
   );
 }
